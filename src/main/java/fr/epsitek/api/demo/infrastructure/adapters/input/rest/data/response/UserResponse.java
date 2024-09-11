@@ -1,9 +1,9 @@
-package fr.epsitek.api.demo.domain;
+package fr.epsitek.api.demo.infrastructure.adapters.input.rest.data.response;
 
 import lombok.Data;
 
 @Data
-public class User {
+public class UserResponse {
     private String firstname;
     private String lastname;
     private String email;
