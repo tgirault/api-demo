@@ -1,6 +1,7 @@
 package fr.epsitek.api.demo.infrastructure.adapters.input.rest.mapper;
 
 import fr.epsitek.api.demo.domain.core.model.User;
+import fr.epsitek.api.demo.infrastructure.adapters.input.rest.data.request.UserRequest;
 import fr.epsitek.api.demo.infrastructure.adapters.input.rest.data.response.UserResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
@@ -12,4 +13,5 @@ import org.mapstruct.ReportingPolicy;
 )
 public interface UserRestMapper {
     UserResponse toUserResponse(final User user);
+    User toUser(final UserRequest userRequest);
 }

@@ -12,4 +12,5 @@ import org.mapstruct.ReportingPolicy;
 )
 public interface UserPersistenceMapper {
     User toUser(final UserEntity userEntity);
+    UserEntity toUserEntity(User user);
 }
