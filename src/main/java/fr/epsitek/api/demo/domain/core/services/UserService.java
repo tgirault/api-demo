@@ -1,37 +1,36 @@
 package fr.epsitek.api.demo.domain.core.services;
 
-import fr.epsitek.api.demo.application.ports.input.CreateUserUseCase;
-import fr.epsitek.api.demo.application.ports.input.FindUserUseCase;
-import fr.epsitek.api.demo.application.ports.output.UserOutputPort;
 import fr.epsitek.api.demo.domain.core.exception.UserAlreadyExistsException;
 import fr.epsitek.api.demo.domain.core.model.User;
+import fr.epsitek.api.demo.domain.core.model.UserId;
+import fr.epsitek.api.demo.domain.ports.UserEventProducer;
+import fr.epsitek.api.demo.domain.ports.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements FindUserUseCase, CreateUserUseCase {
+public class UserService {
 
-    private final UserOutputPort userOutputPort;
+    private final UserRepository userRepository;
+    private final UserEventProducer userEventProducer;
 
     public Optional<User> findByEmail(String email) {
-        // Logique métier
-        return userOutputPort.findByEmail(email);
+        return userRepository.findByEmail(email);
     }
 
-    @Override
-    public Optional<User> getById(UUID id) {
-        return userOutputPort.getById(id);
+    public Optional<User> getById(UserId id) {
+        return userRepository.getById(id);
     }
 
-    @Override
     public User register(User user) throws UserAlreadyExistsException {
-        if (userOutputPort.findByEmail(user.getEmail()).isPresent()) {
+        if (userRepository.findByEmail(user.email()).isPresent()) {
             throw new UserAlreadyExistsException("User already exists");
         }
-        return userOutputPort.save(user);
+        User registeredUser = userRepository.save(user);
+        userEventProducer.publish(registeredUser);
+        return registeredUser;
     }
 }
